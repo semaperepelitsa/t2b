@@ -1,6 +1,15 @@
 <script>
 
 function fetchMMR(name, callback) {
+  if (name === "The Great Cornholio") {
+    console.log("jk", name)
+    callback({
+      name: "The Great Cornholio",
+      solo: "6K for sure",
+      href: "http://www.dotabuff.com/topics/2015-02-07-great-cornholio-show-us-your-main-account-mmr"
+    })
+  }
+
   var key = "fetchMMR-3/" + name
   var exist = localStorage[key]
   if (exist) {
