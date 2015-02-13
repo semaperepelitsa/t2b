@@ -17,7 +17,7 @@ function fetchMMR(name, callback) {
 
 function fetchMMRWeb(name, callback) {
   var req = new XMLHttpRequest()
-  req.open("GET", "http://dota2toplist.com/search?q=" + name)
+  req.open("GET", "http://dota2toplist.com/search?q=" + encodeURIComponent(name))
   req.setRequestHeader('Accept', "text/html")
   req.addEventListener("load", function(){
     if (req.status == 200) {
