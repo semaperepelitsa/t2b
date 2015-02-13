@@ -1,3 +1,30 @@
+function prepareSendMessage() {
+  safari.self.addEventListener("message", function(event){
+    var callback = callbacksSafari[event.name]
+    delete callbacksSafari[event.name]
+    callback(event.message)
+  })
+}
+
+var callbacksSafari = {}
+
+function sendMessage(data, callback){
+  chrome.runtime.sendMessage(data, callback)
+}
+
+function sendMessageSafari(data, callback){
+  var id = Math.random().toString()
+  callbacksSafari[id] = callback
+  safari.self.tab.dispatchMessage(id, data)
+}
+
+if (typeof safari !== "undefined") {
+  sendMessage = sendMessageSafari
+} else {
+  prepareSendMessage = function(){}
+}
+// ----
+
 var players = {}
 
 function requestAllMMR() {
@@ -11,35 +38,30 @@ function requestAllMMR() {
     } else {
       players[playerName] = []
       players[playerName].push(playerTag)
-      console.log("dispatch", playerName)
-      safari.self.tab.dispatchMessage("fetchMMR", { name: playerName })
+      sendMessage({ _message: "fetchMMR", name: playerName }, handleMessage)
     }
   }
 }
 
-function handleMessage(event) {
-  // console.log(event.name, event.message)
+function handleMessage(data) {
+  console.log(data.name, data.solo)
 
-  if (event.name == "newMMR") {
-    var data = event.message
-    console.log(data.name, data.solo)
-    if (!data.solo) { return }
-    var playerTags = players[data.name]
-    playerTags.forEach(function(playerTag){
-      var soloTag = document.createElement("a")
-      if (data.href) {
-        soloTag.href = data.href
-      }
-      soloTag.className = "t2b-rank"
-      soloTag.textContent = data.solo
+  if (!data.solo) { return }
+  var playerTags = players[data.name]
+  playerTags.forEach(function(playerTag){
+    var soloTag = document.createElement("a")
+    if (data.href) {
+      soloTag.href = data.href
+    }
+    soloTag.className = "t2b-rank"
+    soloTag.textContent = data.solo
 
-      playerTag.insertAdjacentElement("afterend", soloTag)
-    })
-  }
+    playerTag.insertAdjacentElement("afterend", soloTag)
+  })
 }
 
 if (window.top === window) {
   console.log("injected")
-  safari.self.addEventListener("message", handleMessage)
+  prepareSendMessage()
   requestAllMMR()
 }

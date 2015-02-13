@@ -1,3 +1,25 @@
+
+function onMessageSafari(callback) {
+  safari.application.addEventListener("message", function (event) {
+    callback(event.message, null, function(data){
+      event.target.page.dispatchMessage(event.name, data)
+    })
+  })
+}
+
+function onMessageChrome(callback) {
+  chrome.runtime.onMessage.addListener(callback)
+}
+
+var onMessage
+if (typeof safari === "undefined") {
+  onMessage = onMessageChrome
+} else {
+  onMessage = onMessageSafari
+}
+// ----------
+
+
 function fetchMMR(name, callback) {
   if (name === "The Great Cornholio") {
     console.log("jk", name)
@@ -8,7 +30,7 @@ function fetchMMR(name, callback) {
     })
   }
 
-  var key = "fetchMMR-3/" + name
+  var key = "fetchMMR-4/" + name
   var exist = localStorage[key]
   if (exist) {
     console.log("found", name)
@@ -33,10 +55,11 @@ function fetchMMRWeb(name, callback) {
       var cols = html.querySelectorAll(".table tbody tr:first-child td")
       if (cols.length > 0) {
         var realname = cols[0].textContent
+        var href = "http://dota2toplist.com" + cols[0].querySelector("a").getAttribute("href")
         if (name === realname) {
           callback({
             name: realname,
-            href:  "http://dota2toplist.com" + cols[0].querySelector("a").href,
+            href:  href,
             solo:  cols[1].textContent,
             party: cols[2].textContent
           })
@@ -51,14 +74,10 @@ function fetchMMRWeb(name, callback) {
   req.send()
 }
 
-function handleMessage(event) {
-  console.log(event)
-  if (event.name == "fetchMMR") {
-    fetchMMR(event.message.name, function(data){
-      if (!data.solo) { return }
-      event.target.page.dispatchMessage("newMMR", data)
+onMessage(function(request, sender, sendResponse) {
+  if (request._message == "fetchMMR") {
+    fetchMMR(request.name, function(data){
+      sendResponse(data)
     })
   }
-}
-
-safari.application.addEventListener("message", handleMessage)
+})

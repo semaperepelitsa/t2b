@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "T2B",
+  "version": "1.0",
+
+  "permissions": [
+    "http://*.dotabuff.com/",
+    "http://dota2toplist.com/"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["http://*.dotabuff.com/topics/*"],
+      "css": ["src/injected.css"],
+      "js": ["src/injected.js"]
+    }
+  ],
+
+  "background": {
+    "page": "src/global.html",
+    "persistent": true
+  }
+}
