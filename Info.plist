@@ -2,12 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Author</key>
+	<string>Semyon Perepelitsa</string>
 	<key>Builder Version</key>
 	<string>10600.3.18</string>
 	<key>CFBundleDisplayName</key>
-	<string>t2b</string>
+	<string>T2B</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.t2b</string>
+	<string>in.sema.t2b</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
@@ -17,7 +19,7 @@
 	<key>Chrome</key>
 	<dict>
 		<key>Global Page</key>
-		<string>Global.html</string>
+		<string>src/global.html</string>
 	</dict>
 	<key>Content</key>
 	<dict>
@@ -25,12 +27,12 @@
 		<dict>
 			<key>End</key>
 			<array>
-				<string>Injected.js</string>
+				<string>src/injected.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>
 		<array>
-			<string>Injected.css</string>
+			<string>src/injected.css</string>
 		</array>
 		<key>Whitelist</key>
 		<array>
