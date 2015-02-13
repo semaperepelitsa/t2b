@@ -12,7 +12,7 @@
     {
       "matches": ["http://*.dotabuff.com/topics/*"],
       "css": ["src/injected.css"],
-      "js": ["src/injected.js"]
+      "js": ["src/safrome.js", "src/injected.js"]
     }
   ],
 

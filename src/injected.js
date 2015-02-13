@@ -1,30 +1,3 @@
-function prepareSendMessage() {
-  safari.self.addEventListener("message", function(event){
-    var callback = callbacksSafari[event.name]
-    delete callbacksSafari[event.name]
-    callback(event.message)
-  })
-}
-
-var callbacksSafari = {}
-
-function sendMessage(data, callback){
-  chrome.runtime.sendMessage(data, callback)
-}
-
-function sendMessageSafari(data, callback){
-  var id = Math.random().toString()
-  callbacksSafari[id] = callback
-  safari.self.tab.dispatchMessage(id, data)
-}
-
-if (typeof safari !== "undefined") {
-  sendMessage = sendMessageSafari
-} else {
-  prepareSendMessage = function(){}
-}
-// ----
-
 var players = {}
 
 function requestAllMMR() {
@@ -38,7 +11,7 @@ function requestAllMMR() {
     } else {
       players[playerName] = []
       players[playerName].push(playerTag)
-      sendMessage({ _message: "fetchMMR", name: playerName }, handleMessage)
+      safrome.sendMessage({ _message: "fetchMMR", name: playerName }, handleMessage)
     }
   }
 }
@@ -62,6 +35,6 @@ function handleMessage(data) {
 
 if (window.top === window) {
   console.log("injected")
-  prepareSendMessage()
+  safrome.prepareSendMessage()
   requestAllMMR()
 }

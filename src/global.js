@@ -1,25 +1,3 @@
-
-function onMessageSafari(callback) {
-  safari.application.addEventListener("message", function (event) {
-    callback(event.message, null, function(data){
-      event.target.page.dispatchMessage(event.name, data)
-    })
-  })
-}
-
-function onMessageChrome(callback) {
-  chrome.runtime.onMessage.addListener(callback)
-}
-
-var onMessage
-if (typeof safari === "undefined") {
-  onMessage = onMessageChrome
-} else {
-  onMessage = onMessageSafari
-}
-// ----------
-
-
 function fetchMMR(name, callback) {
   if (name === "The Great Cornholio") {
     console.log("jk", name)
@@ -74,7 +52,7 @@ function fetchMMRWeb(name, callback) {
   req.send()
 }
 
-onMessage(function(request, sender, sendResponse) {
+safrome.onMessage(function(request, sender, sendResponse) {
   if (request._message == "fetchMMR") {
     fetchMMR(request.name, function(data){
       sendResponse(data)
