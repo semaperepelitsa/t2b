@@ -1,5 +1,6 @@
 .t2b-rank {
   display: inline;
-  color: #8c8c8c;
+  color: #a89cee !important;
   margin-left: 4px !important;
+  font-size: 0.9em !important;
 }

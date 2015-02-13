@@ -1,7 +1,7 @@
 <script>
 
 function fetchMMR(name, callback) {
-  var key = "fetchMMR/" + name
+  var key = "fetchMMR-3/" + name
   var exist = localStorage[key]
   if (exist) {
     console.log("found", name)
@@ -29,6 +29,7 @@ function fetchMMRWeb(name, callback) {
         if (name === realname) {
           callback({
             name: realname,
+            href:  "http://dota2toplist.com" + cols[0].querySelector("a").href,
             solo:  cols[1].textContent,
             party: cols[2].textContent
           })
@@ -47,7 +48,7 @@ function handleMessage(event) {
   console.log(event)
   if (event.name == "fetchMMR") {
     fetchMMR(event.message.name, function(data){
-      if (!data.name) { return }
+      if (!data.solo) { return }
       event.target.page.dispatchMessage("newMMR", data)
     })
   }

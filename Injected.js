@@ -18,22 +18,22 @@ function requestAllMMR() {
 }
 
 function handleMessage(event) {
-  console.log(event.name, event.message)
+  // console.log(event.name, event.message)
 
   if (event.name == "newMMR") {
     var data = event.message
+    console.log(data.name, data.solo)
+    if (!data.solo) { return }
     var playerTags = players[data.name]
     playerTags.forEach(function(playerTag){
-      var soloTag = document.createElement("span")
+      var soloTag = document.createElement("a")
+      if (data.href) {
+        soloTag.href = data.href
+      }
       soloTag.className = "t2b-rank"
       soloTag.textContent = data.solo
 
-      var partyTag = document.createElement("span")
-      partyTag.className = "t2b-rank"
-      partyTag.textContent = data.party
-
-      playerTag.appendChild(soloTag)
-      // playerTag.appendChild(partyTag)
+      playerTag.insertAdjacentElement("afterend", soloTag)
     })
   }
 }
