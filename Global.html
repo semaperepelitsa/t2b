@@ -1,0 +1,57 @@
+<script>
+
+function fetchMMR(name, callback) {
+  var key = "fetchMMR/" + name
+  var exist = localStorage[key]
+  if (exist) {
+    console.log("found", name)
+    callback(JSON.parse(exist))
+  } else {
+    console.log("miss", name)
+    fetchMMRWeb(name, function(data){
+      localStorage[key] = JSON.stringify(data)
+      callback(data)
+    })
+  }
+}
+
+function fetchMMRWeb(name, callback) {
+  var req = new XMLHttpRequest()
+  req.open("GET", "http://dota2toplist.com/search?q=" + name)
+  req.setRequestHeader('Accept', "text/html")
+  req.addEventListener("load", function(){
+    if (req.status == 200) {
+      var parser = new DOMParser()
+      var html = parser.parseFromString(req.responseText, "text/html")
+      var cols = html.querySelectorAll(".table tbody tr:first-child td")
+      if (cols.length > 0) {
+        var realname = cols[0].textContent
+        if (name === realname) {
+          callback({
+            name: realname,
+            solo:  cols[1].textContent,
+            party: cols[2].textContent
+          })
+        } else {
+          callback({})
+        }
+      } else {
+        callback({})
+      }
+    }
+  })
+  req.send()
+}
+
+function handleMessage(event) {
+  console.log(event)
+  if (event.name == "fetchMMR") {
+    fetchMMR(event.message.name, function(data){
+      if (!data.name) { return }
+      event.target.page.dispatchMessage("newMMR", data)
+    })
+  }
+}
+
+safari.application.addEventListener("message", handleMessage)
+</script>
