@@ -17,8 +17,6 @@ function requestAllMMR() {
 }
 
 function handleMessage(data) {
-  console.log(data.name, data.solo)
-
   if (!data.solo) { return }
   var playerTags = players[data.name]
   playerTags.forEach(function(playerTag){
@@ -34,7 +32,6 @@ function handleMessage(data) {
 }
 
 if (window.top === window) {
-  console.log("injected")
   safrome.prepareSendMessage()
   requestAllMMR()
 }
