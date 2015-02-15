@@ -57,5 +57,7 @@
 			<string>Some</string>
 		</dict>
 	</dict>
+	<key>Update Manifest URL</key>
+	<string>https://semaperepelitsa.github.io/t2b/UpdateManifest.plist</string>
 </dict>
 </plist>
