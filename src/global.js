@@ -16,9 +16,16 @@ function fetchMMR(name, callback) {
   } else {
     console.log("miss", name)
     fetchMMRWeb(name, function(data){
-      sessionStorage[key] = JSON.stringify(data)
-      callback(data)
+      if (data) {
+        console.log("ok", name, data)
+        sessionStorage[key] = JSON.stringify(data)
+        callback(data)
+      } else {
+        console.log("error", name)
+        callback({})
+      }
     })
+    return true // keep connection alive
   }
 }
 
@@ -49,13 +56,14 @@ function fetchMMRWeb(name, callback) {
       }
     }
   })
+  req.addEventListener("error", function(){
+    callback(null)
+  })
   req.send()
 }
 
 safrome.onMessage(function(request, sender, sendResponse) {
   if (request._message == "fetchMMR") {
-    fetchMMR(request.name, function(data){
-      sendResponse(data)
-    })
+    return fetchMMR(request.name, sendResponse)
   }
 })
