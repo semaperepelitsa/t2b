@@ -9,14 +9,14 @@ function fetchMMR(name, callback) {
   }
 
   var key = "fetchMMR-4/" + name
-  var exist = localStorage[key]
+  var exist = sessionStorage[key]
   if (exist) {
     console.log("found", name)
     callback(JSON.parse(exist))
   } else {
     console.log("miss", name)
     fetchMMRWeb(name, function(data){
-      localStorage[key] = JSON.stringify(data)
+      sessionStorage[key] = JSON.stringify(data)
       callback(data)
     })
   }
