@@ -3,8 +3,8 @@ function fetchMMR(name, callback) {
     console.log("jk", name)
     callback({
       name: "The Great Cornholio",
-      solo: "6K for sure",
-      href: "http://www.dotabuff.com/topics/2015-02-07-great-cornholio-show-us-your-main-account-mmr"
+      solo: "over 9000",
+      href: "http://www.dotabuff.com/topics/2015-02-16-best-dota-2-player-"
     })
   }
 
