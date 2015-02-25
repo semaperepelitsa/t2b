@@ -10,7 +10,10 @@
 
   "content_scripts": [
     {
-      "matches": ["http://*.dotabuff.com/topics/*"],
+      "matches": [
+        "http://*.dotabuff.com/topics/*",
+        "http://*.dotabuff.com/blog/*"
+      ],
       "css": ["src/injected.css"],
       "js": ["src/safrome.js", "src/injected.js"]
     }

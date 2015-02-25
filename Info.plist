@@ -38,6 +38,7 @@
 		<key>Whitelist</key>
 		<array>
 			<string>http://*.dotabuff.com/topics/*</string>
+			<string>http://*.dotabuff.com/blog/*</string>
 		</array>
 	</dict>
 	<key>DeveloperIdentifier</key>
