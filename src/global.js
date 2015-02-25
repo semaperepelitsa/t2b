@@ -1,3 +1,5 @@
+var toArray = function(nodeList){ return Array.prototype.slice.call(nodeList,0); }
+
 function fetchMMR(name, callback) {
   if (name === "The Great Cornholio") {
     console.log("jk", name)
@@ -29,31 +31,45 @@ function fetchMMR(name, callback) {
   }
 }
 
+function d2tPlayerMatches(html, name){
+  var playerCells = toArray(html.querySelectorAll(".table td.list-player"))
+  var playerCellsEqual = playerCells.filter(function(cell){
+    return name === cell.textContent
+  })
+  return playerCellsEqual.length
+}
+
+function d2tFirstPlayerData(html) {
+  var cols = html.querySelectorAll(".table tbody tr:first-child td")
+  var realname = cols[0].textContent
+  var href = "http://dota2toplist.com" + cols[0].querySelector("a").getAttribute("href")
+  var href = "http://dota2toplist.com" + cols[0].querySelector("a").getAttribute("href")
+  return {
+    name: cols[0].textContent,
+    href:  href,
+    solo:  cols[1].textContent,
+    party: cols[2].textContent
+  }
+}
+
 function fetchMMRWeb(name, callback) {
   var req = new XMLHttpRequest()
-  req.open("GET", "http://dota2toplist.com/search?q=" + encodeURIComponent(name))
+  var searchURL = "http://dota2toplist.com/search?q=" + encodeURIComponent(name)
+  req.open("GET", searchURL)
   req.setRequestHeader('Accept', "text/html")
   req.addEventListener("load", function(){
-    if (req.status == 200) {
-      var parser = new DOMParser()
-      var html = parser.parseFromString(req.responseText, "text/html")
-      var cols = html.querySelectorAll(".table tbody tr:first-child td")
-      if (cols.length > 0) {
-        var realname = cols[0].textContent
-        var href = "http://dota2toplist.com" + cols[0].querySelector("a").getAttribute("href")
-        if (name === realname) {
-          callback({
-            name: realname,
-            href:  href,
-            solo:  cols[1].textContent,
-            party: cols[2].textContent
-          })
-        } else {
-          callback({})
-        }
-      } else {
-        callback({})
-      }
+    if (req.status !== 200) { return }
+
+    var parser = new DOMParser()
+    var html = parser.parseFromString(req.responseText, "text/html")
+    var playerMatches = d2tPlayerMatches(html, name)
+
+    if (playerMatches == 1) {
+      callback(d2tFirstPlayerData(html))
+    } else if (playerMatches > 1) {
+      callback({ name: name, href: searchURL, solo: "***" })
+    } else {
+      callback({})
     }
   })
   req.addEventListener("error", function(){
